@@ -148,26 +148,38 @@ I started contributing to the Haskell Language Server (HLS) in January 2026. Sin
 \subsubsection*{Merged PR's}
 \begin{itemize}
   \item \pull{4791} - Improving Notes Plugin
-  \item \pull{4813} - Cursor aware record expansion
-  \item \pull{4823} - Smart Casing in modules and file paths
-  \item \pull{4828} - fix notes crashing and leaking single comments notes
-  \item \pull{4841} - fix spacing issues while refactor-reduce
-  \item \pull{4848} - Custom-setups completion in cabal files
+  \\ Enhanced the Notes plugin with hover support and autocomplete for note declarations and references.
 
-  \item \pull{4856} - Use Server side Diagnostics
+  \item \pull{4813} - Cursor aware record expansion
+  \\ Implemented cursor's position–aware record expansion for explicitRecord, providing a single code action based on the cursor location.
+
+  \item \pull{4823} - Smart Casing in modules and file paths
+  \\ Implemented Smart Case completions in Cabal files for modules and file paths.
+
+  \item \pull{4828} - fix notes crashing and leaking single comments notes
+  \\ Fixed Notes plugin crash and corrected parsing of single-line note declarations.
+  \item \pull{4841} - fix spacing issues while refactor-reduce
+  \\ Fixed spacing inconsistencies in reduction code actions by adding normalization and removing resetEntryDP.
+
+  \item \pull{4848} - Custom-setups completion in cabal files
+  \\ Fixed missing completions for the custom-setup stanza in Cabal files by adding the required stanza mapping.
+
+  \item \pull{4856} (co-authored) - Use Server side Diagnostics
+  \\  Implemented server-side diagnostics injection for code actions by using activeDiagnosticsInRange instead of relying on client-provided diagnostics.
+  \item \pull{4857} - Produce structured error for unknown module
+  \\ Replaced regex-based unknown module detection with structured cradle error diagnostics.
 \end{itemize}
 
 \subsubsection*{Open PR's}
 \begin{itemize}
   \item \pull{4845} - Cross Module renaming
-  \item \pull{4849} - Migrate HLS-refactor-plugin to use Structured Diagnostic 
-  \item \pull{4857} - Produce structured error for unknown module 
+  \item \pull{4849} - Migrate HLS-refactor-plugin to use Structured Diagnostic
 \end{itemize}
 
 \subsubsection*{Issues/Bugs Caught}
 \begin{itemize}
   \item \issue{4843} - Double hashes in ghcide cache path causes long path
-  \item \pull{4834} - Use VirtualFileTree in hls-call-hierarchy-plugin-tests 
+  \item \pull{4834} - Use VirtualFileTree in hls-call-hierarchy-plugin-tests
   \item \pull{4863} - Pin version of extra to 1.8.1 for stack
 \end{itemize}
 
