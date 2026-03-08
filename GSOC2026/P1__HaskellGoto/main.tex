@@ -116,28 +116,19 @@ open source definitions from third-party libraries.
   \end{description}
 \end{quote}
 
-\subsection*{Programming Experience}
+\subsection*{Background \& Programming Experience}
+I have been programming for approximately four years. I began with C and C++, focusing on building a strong foundation in programming fundamentals and data structures and algorithms while developing several small projects. Over time, I expanded into domain-specific technologies, learning JavaScript for web development and Python for machine learning. During this period, I worked on multiple projects, completed two internships, and co-authored two research publications related to these areas.
 
-\subsection*{My Motivation}
-
-I have always been fascinated with the power \textit{Mathematica}
-\cite{mathematica} brings to the process of mathematical study. I soon discovered sympy and decided to give it a shot.
-
-Series play an integral role in field of mathematics. Series have various applications, like solving differential equations.
-How a seemingly complex function can be simplified using series is what fascinates me the most.
-
+Around one and a half years ago, I started working with TypeScript and developed a strong interest in statically typed languages. This interest led me to explore Haskell, where I became particularly interested in its type system and functional programming paradigm. Over the past few months, I have been actively learning Haskell and contributing to the Haskell Language Server (HLS), gaining practical experience with the codebase
 
 \subsection*{My Projects}
-\begin{quote}
-  \begin{description}
-    \item [PyChat \cite{pychat}] - A simple asynchronous chat client, based on \emph{Twisted}\cite{twisted} framework.
-    \item [Sub \cite{sub}] - Simple command line tool for downloading subtitles.
-    \item [autosign \cite{autosign}] - Easily add signatures to files
-    \item [PyCross \cite{pycross}] - Single/multiplayer TicTacToe game. Single player is based on \emph{minimax}\cite{minimax} algorithm and \emph{Monte Carlo}\cite{montecarlo} Simulation.
-  \end{description}
-\end{quote}
+\begin{itemize}
+    \item Checkmate.io - A TypeScript chessboard built from scratch with full move validation and chess rules, focusing on typed design and state management.
+    \item SafeSage - A blogging platform built with TypeScript that provides a rich text editing experience similar to modern document editors, enabling users to write and publish expressive blog content.
+    \item MyGit - A lightweight version control system implementing repository creation, staging, committing, branching, and merging. It uses delta compression and a hash-based commit graph to efficiently track changes and enable full state recovery at any commit.
+\end{itemize}
 
-All of my projects (including others) can be found on my \href{https://github.com/leosartaj}{github} page.
+Most of my projects (including others) can be found on my \href{https://github.com/vidit-od}{github} page.
 
 \newpage
 \subsection*{Contributions}
@@ -173,7 +164,9 @@ I started contributing to the Haskell Language Server (HLS) in January 2026. Sin
 \subsubsection*{Open PR's}
 \begin{itemize}
   \item \pull{4845} - Cross Module renaming
+  \\ Implemented cross-module renaming in HLS using HieDb and AST analysis to correctly handle local, imported, and exported identifiers.
   \item \pull{4849} - Migrate HLS-refactor-plugin to use Structured Diagnostic
+  \\ Partially migrated hls-refactor-plugin to structured diagnostics by updating several code actions and hole-handling functions to use structured diagnostic information.
 \end{itemize}
 
 \subsubsection*{Issues/Bugs Caught}
