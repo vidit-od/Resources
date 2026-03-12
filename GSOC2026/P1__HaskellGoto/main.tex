@@ -22,6 +22,7 @@
 \usepackage{array}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{enumitem}
 
 \newcommand{\pull}[1]{\href{https://github.com/haskell/haskell-language-server/pull/#1}{#1}}
 \newcommand{\issue}[1]{\href{https://github.com/haskell/haskell-language-server/issues/#1}{#1}}
@@ -137,43 +138,56 @@ I started contributing to the Haskell Language Server (HLS) in January 2026. Sin
 
 
 \subsubsection*{Merged PR's}
+The following pull requests represent my \textbf{direct contributions} that were reviewed and \textbf{merged} into the Haskell Language Server master branch.
 \begin{itemize}
-  \item \pull{4791} - Improving Notes Plugin
-  \\ Enhanced the Notes plugin with hover support and autocomplete for note declarations and references.
+    \item\pull{4791} -- \textit{Improving Notes Plugin}
+    \\ Enhanced the Notes plugin with hover support and autocomplete for note declarations and references.
 
-  \item \pull{4813} - Cursor aware record expansion
+  \item \pull{4813} -- \textit{Cursor aware record expansion}
   \\ Implemented cursor's position–aware record expansion for explicitRecord, providing a single code action based on the cursor location.
 
-  \item \pull{4823} - Smart Casing in modules and file paths
+  \item \pull{4823} -- \textit{Smart Casing in modules and file paths}
   \\ Implemented Smart Case completions in Cabal files for modules and file paths.
 
-  \item \pull{4828} - fix notes crashing and leaking single comments notes
+  \item \pull{4828} -- \textit{Fix notes crashing and leaking single comments notes}
   \\ Fixed Notes plugin crash and corrected parsing of single-line note declarations.
-  \item \pull{4841} - fix spacing issues while refactor-reduce
+
+  \item \pull{4841} -- \textit{Fix spacing issues while refactor-reduce}
   \\ Fixed spacing inconsistencies in reduction code actions by adding normalization and removing resetEntryDP.
 
-  \item \pull{4848} - Custom-setups completion in cabal files
+  \item \pull{4848} -- \textit{Custom-setups completion in cabal files}
   \\ Fixed missing completions for the custom-setup stanza in Cabal files by adding the required stanza mapping.
 
-  \item \pull{4856} (co-authored) - Use Server side Diagnostics
+  \item \pull{4856} -- \textit{Use Server side Diagnostics}
   \\  Implemented server-side diagnostics injection for code actions by using activeDiagnosticsInRange instead of relying on client-provided diagnostics.
-  \item \pull{4857} - Produce structured error for unknown module
+
+  \item \pull{4857} -- \textit{Produce structured error for unknown module }
   \\ Replaced regex-based unknown module detection with structured cradle error diagnostics.
 \end{itemize}
 
 \subsubsection*{Open PR's}
+The following pull requests represent my \textbf{direct contributions} that are currently \textbf{under review} and have not yet been merged into the Haskell Language Server master branch.
 \begin{itemize}
   \item \pull{4845} - Cross Module renaming
   \\ Implemented cross-module renaming in HLS using HieDb and AST analysis to correctly handle local, imported, and exported identifiers.
   \item \pull{4849} - Migrate HLS-refactor-plugin to use Structured Diagnostic
   \\ Partially migrated hls-refactor-plugin to structured diagnostics by updating several code actions and hole-handling functions to use structured diagnostic information.
+  \item \pull{4696} - Upgrade Stack Snapshots
+  \\ Updated Stack configurations by removing the GHC 9.6 build option and introducing support for GHC 9.10, enabling HLS to build with both GHC 9.8 and GHC 9.10.
+  \\
 \end{itemize}
 
-\subsubsection*{Issues/Bugs Caught}
+\subsubsection*{Other Contributions}
+This section highlights \textbf{indirect contributions} where I investigated issues and reported bugs that were later resolved by other HLS contributors.
 \begin{itemize}
   \item \issue{4843} - Double hashes in ghcide cache path causes long path
+  \\ Reported a Windows-specific issue where long file paths prevented HLS from accessing \texttt{.hie} files, causing many \texttt{hls-rename-plugin} tests to fail.
+
   \item \pull{4834} - Use VirtualFileTree in hls-call-hierarchy-plugin-tests
+  \\ Investigated consistently failing Windows tests in the \texttt{hls-call-hierarchy-plugin} by analyzing CI logs. Identified that the failures were due to incomplete indexing leading to inconsistent call hierarchy results on Windows.
+
   \item \pull{4863} - Pin version of extra to 1.8.1 for stack
+  \\ Reported stale configurations in \texttt{stack.yaml} leading to failing of \texttt{circleci} regressions tests
 \end{itemize}
 
 % Extended description
@@ -184,32 +198,15 @@ I started contributing to the Haskell Language Server (HLS) in January 2026. Sin
 % Road-map
 \newpage
 \section{Road-map}
-I will not be available for two or three separate days in June (travelling). Apart from this I have no prior commitments.
-I have been following Sympy's mailing list discussions for a while now and have looked at some of the codebase.
-I will be able to devote 40-45 hrs a week.
 
-\subsection{Community Bonding Period}
+\subsection{Pre-coding}
 
 \begin{itemize}
 \item Discuss the project with my mentor in further detail.
-\item Get more acquainted with Sympy's codebase
-\item Read the below listed references in further detail.
 \end{itemize}
 
 \subsection{Coding Period}
 
-\begin{itemize}
-  \item Implement Sequence classes (First week of June)
-  \item Operations on sequences (Second week of June)
-  \item SeriesData and SeriesX classes (Third week of June)
-  \item Operations on SeriesX (First week of July)
-  \item Implement Formal Power Series (Third week of July)
-  \item Limits of Sequences (Second week of August)
-  \item One buffer week for any unexpected delays (or more enhancements)
-\end{itemize}
-
 \subsection{Post GSoC}
-Sympy provides me with a good platform to hone my programming skills and put my mathematical skills to good use.
-Series are one of the many great ideas to have evolved in mathematics. They are among my favorite mathematical topics. There are other areas in the field of mathematics where SymPy could do a much better job, and I would love to contribute and enhance them.
 
 \end{document}
