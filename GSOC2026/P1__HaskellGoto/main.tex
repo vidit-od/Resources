@@ -24,6 +24,8 @@
 \usepackage{float}
 \usepackage{enumitem}
 
+\setlength{\parindent}{0pt}
+
 \newcommand{\pull}[1]{\href{https://github.com/haskell/haskell-language-server/pull/#1}{#1}}
 \newcommand{\issue}[1]{\href{https://github.com/haskell/haskell-language-server/issues/#1}{#1}}
 
@@ -96,7 +98,7 @@ open source definitions from third-party libraries.
 \section{About Me}
 
 \subsection*{The Student}
-
+\addcontentsline{toc}{subsection}{The Student}
 \begin{quote}
   \begin{description}
     \item [Name] {Vidit Odedra}
@@ -107,7 +109,7 @@ open source definitions from third-party libraries.
 \end{quote}
 
 \subsection*{The Institute}
-
+\addcontentsline{toc}{subsection}{The Institute}
 \begin{quote}
   \begin{description}
     \item [University] {National Institute of Technology, Tiruchirappalli}
@@ -118,11 +120,13 @@ open source definitions from third-party libraries.
 \end{quote}
 
 \subsection*{Background \& Programming Experience}
+\addcontentsline{toc}{subsection}{Background \& Programming Experience}
 I have been programming for approximately four years. I began with C and C++, focusing on building a strong foundation in programming fundamentals and data structures and algorithms while developing several small projects. Over time, I expanded into domain-specific technologies, learning JavaScript for web development and Python for machine learning. During this period, I worked on multiple projects, completed two internships, and co-authored two research publications related to these areas.
-
-Around one and a half years ago, I started working with TypeScript and developed a strong interest in statically typed languages. This interest led me to explore Haskell, where I became particularly interested in its type system and functional programming paradigm. Over the past few months, I have been actively learning Haskell and contributing to the Haskell Language Server (HLS), gaining practical experience with the codebase
+\vspace{0.8em}
+\\ Around one and a half years ago, I started working with TypeScript and developed a strong interest in statically typed languages. This interest led me to explore Haskell, where I became particularly interested in its type system and functional programming paradigm. Over the past few months, I have been actively learning Haskell and contributing to the Haskell Language Server (HLS), gaining practical experience with the codebase
 
 \subsection*{My Projects}
+\addcontentsline{toc}{subsection}{My Projects}
 \begin{itemize}
     \item Checkmate.io - A TypeScript chessboard built from scratch with full move validation and chess rules, focusing on typed design and state management.
     \item SafeSage - A blogging platform built with TypeScript that provides a rich text editing experience similar to modern document editors, enabling users to write and publish expressive blog content.
@@ -133,68 +137,121 @@ Most of my projects (including others) can be found on my \href{https://github.c
 
 \newpage
 \subsection*{Contributions}
-
+\addcontentsline{toc}{subsection}{Contributions}
 I started contributing to the Haskell Language Server (HLS) in January 2026. Since then, I have been actively contributing to the project while learning from the community and gaining familiarity with the HLS codebase. Below is a summary of my contributions and involvement with the project.
 
 
 \subsubsection*{Merged PR's}
+\addcontentsline{toc}{subsubsection}{Merged PRs}
 The following pull requests represent my \textbf{direct contributions} that were reviewed and \textbf{merged} into the Haskell Language Server master branch.
+\vspace{0.3em}
 \begin{itemize}
-    \item\pull{4791} -- \textit{Improving Notes Plugin}
-    \\ Enhanced the Notes plugin with hover support and autocomplete for note declarations and references.
-
+   \item\pull{4791} -- \textit{Improving Notes Plugin}
+   \\ Enhanced the Notes plugin with hover support and autocomplete for note declarations and references.
+   \vspace{0.3em}
   \item \pull{4813} -- \textit{Cursor aware record expansion}
   \\ Implemented cursor's position–aware record expansion for explicitRecord, providing a single code action based on the cursor location.
-
+  \vspace{0.3em}
   \item \pull{4823} -- \textit{Smart Casing in modules and file paths}
   \\ Implemented Smart Case completions in Cabal files for modules and file paths.
-
+  \vspace{0.3em}
   \item \pull{4828} -- \textit{Fix notes crashing and leaking single comments notes}
-  \\ Fixed Notes plugin crash and corrected parsing of single-line note declarations.
-
+  \\ Fixed Notes plugin crash when no locations were found and corrected parsing of single-line note declarations.
+  \vspace{0.3em}
   \item \pull{4841} -- \textit{Fix spacing issues while refactor-reduce}
   \\ Fixed spacing inconsistencies in reduction code actions by adding normalization and removing resetEntryDP.
-
+  \vspace{0.3em}
   \item \pull{4848} -- \textit{Custom-setups completion in cabal files}
   \\ Fixed missing completions for the custom-setup stanza in Cabal files by adding the required stanza mapping.
-
+  \vspace{0.3em}
   \item \pull{4856} -- \textit{Use Server side Diagnostics}
   \\  Implemented server-side diagnostics injection for code actions by using activeDiagnosticsInRange instead of relying on client-provided diagnostics.
-
+  \vspace{0.3em}
   \item \pull{4857} -- \textit{Produce structured error for unknown module }
   \\ Replaced regex-based unknown module detection with structured cradle error diagnostics.
+  \vspace{0.3em}
+  \item \pull{4696} - \textit{Upgrade Stack Snapshots}
+  \\ Updated Stack configurations by removing the GHC 9.6 build option and introducing support for GHC 9.10, enabling HLS to build with both GHC 9.8 and GHC 9.10.
+
 \end{itemize}
 
-\subsubsection*{Open PR's}
+\subsubsection*{Open PRs}
+\addcontentsline{toc}{subsubsection}{Open PRs}
 The following pull requests represent my \textbf{direct contributions} that are currently \textbf{under review} and have not yet been merged into the Haskell Language Server master branch.
+\vspace{0.3em}
 \begin{itemize}
-  \item \pull{4845} - Cross Module renaming
+  \item \pull{4845} -- \textit{Cross Module renaming}
   \\ Implemented cross-module renaming in HLS using HieDb and AST analysis to correctly handle local, imported, and exported identifiers.
-  \item \pull{4849} - Migrate HLS-refactor-plugin to use Structured Diagnostic
+  \vspace{0.3em}
+
+  \item \pull{4849} -- \textit{Migrate HLS-refactor-plugin to use Structured Diagnostic}
   \\ Partially migrated hls-refactor-plugin to structured diagnostics by updating several code actions and hole-handling functions to use structured diagnostic information.
-  \item \pull{4696} - Upgrade Stack Snapshots
-  \\ Updated Stack configurations by removing the GHC 9.6 build option and introducing support for GHC 9.10, enabling HLS to build with both GHC 9.8 and GHC 9.10.
-  \\
+
 \end{itemize}
 
 \subsubsection*{Other Contributions}
+\addcontentsline{toc}{subsubsection}{Other Contributions}
 This section highlights \textbf{indirect contributions} where I investigated issues and reported bugs that were later resolved by other HLS contributors.
+\vspace{0.3em}
+
 \begin{itemize}
-  \item \issue{4843} - Double hashes in ghcide cache path causes long path
-  \\ Reported a Windows-specific issue where long file paths prevented HLS from accessing \texttt{.hie} files, causing many \texttt{hls-rename-plugin} tests to fail.
+  \item \issue{4843} - \textit{Double hashes in ghcide cache path causes long path}
+  \\ Reported a Windows-specific issue where long file paths prevented HLS from accessing \texttt{.hie} files, causing many
+  unexpected tests to failures on multiple plugins.
+  \vspace{0.3em}
 
-  \item \pull{4834} - Use VirtualFileTree in hls-call-hierarchy-plugin-tests
+  \item \pull{4834} - \textit{Use VirtualFileTree in hls-call-hierarchy-plugin-tests}
   \\ Investigated consistently failing Windows tests in the \texttt{hls-call-hierarchy-plugin} by analyzing CI logs. Identified that the failures were due to incomplete indexing leading to inconsistent call hierarchy results on Windows.
+  \vspace{0.3em}
 
-  \item \pull{4863} - Pin version of extra to 1.8.1 for stack
+  \item \pull{4863} - \textit{Pin version of extra to 1.8.1 for stack}
   \\ Reported stale configurations in \texttt{stack.yaml} leading to failing of \texttt{circleci} regressions tests
+  \vspace{0.3em}
+
 \end{itemize}
 
 % Extended description
 \newpage
 \section{The Project}
+\subsection{Objective}
 
+\textcolor{magenta}{\textit{What :}} Goto dependency is a feature provided by language servers that improves the user's context on imported symbols. Triggering this on a symbol allows users to view the signature and the underlying implementation of a function they are importing. This helps them understand the abstracted components used within a code block.
+\vspace{0.6em}
 
+\textcolor{magenta}{\textit{Why : }} In larger codebases, developers often work with many abstracted symbols that originate from third-party libraries. The current workflow typically involves searching for the corresponding library, locating the symbol manually, and then accessing its implementation. This interrupts the development flow and requires developers to leave their IDE.
+\vspace{0.6em}
+
+\textcolor{magenta}{\textit{Limitation :  }} Currently, haskell-language-server provides goto definition functionality for local projects, i.e., when the imported symbols are present within the project folder. However, for symbols provided by third-party libraries, or symbols whose actual source code does not exist within the project workspace, there is currently no support for this feature.
+\vspace{0.6em}
+
+\textcolor{magenta}{\textit{Goal :  }} The objective of this project is to extend the existing goto definition functionality to support third-party dependencies. This would allow developers to navigate directly to the implementation of imported symbols from external libraries within their IDE, without needing to manually search for the source code online.
+
+\subsection{Existing Work}
+This project was previously attempted in \textcolor{magenta}{PR \#}\pull{3749}. Much of the structural groundwork has already been established there, and this implementation will serve as the base for this project, with further improvements built on top of it.This section outlines the approach taken in that PR.
+\vspace{0.6em}
+
+\textcolor{magenta}{HIE :  } When GHC compiles Haskell projects it uses the source files and generates .hi file and object files. Optionally HIE (Haskell information exchange) files are also generated. These contain rich metadata like full typed syntax tree, name bindingss and references, source locations and most importantly original source code of the module embedded as a ByteString. These files are used to implement goto dependency defination.
+\vspace{0.6em}
+
+\textcolor{magenta}{Setup :  } HIE files are not generated by default during compilation, passing `-fwrite-ide-info` flag during compilation generates them and stores the resulting files inside cabal package store at a predictable location. extraCompilationArtifacts  constant inside cabal's source governs this predictable location. using the above flag and constant makes sure that HIE files are always generated and ready to be used by HLS.
+\vspace{0.6em}
+
+\textcolor{magenta}{HieDb :  }
+HLS maintains a SQLite database called HieDb that acts as an index over compiled Haskell modules. It stores metadata extracted from HIE files. HLS uses this database as a fast lookup mechanism when resolving symbol locations, avoiding the need to parse raw HIE files for every query.
+
+\vspace{0.6em}
+Most importantly, HieDb stores the path to the original source file i.e for project modules this points to an existing .hs file. For dependency modules, this path is missing because only the HIE file exists in the Cabal store and no corresponding source file is available in the workspace. we builds on this infrastructure by intercepting the point where HLS falls back to HieDb for symbol resolution and generating a source file at that moment.This metadata allows HLS to map a symbol reference directly to its declaration location, making it possible to implement navigation features such as goto definition.
+
+\vspace{0.6em}
+\textcolor{magenta}{Mechanism :  }
+We can implements goto dependency definition through a pipeline of four coordinated steps.
+
+\begin{enumerate}[label=\textcolor{magenta}{\arabic*.}]
+    \item During HLS startup, a new background task called indexDependencyHieFiles performs a breadth-first traversal of the transitive dependency graph, discovers all HIE files in the Cabal store for the current project's dependencies, and registers them in HieDb with a FakeFile marker — indicating the HIE file is known but no source file has been written yet.
+    \item when the user triggers goto definition on a dependency symbol, HLS queries HieDb and finds the module's HIE file path.
+    \item A new function called lookupMod reads that HIE file from disk, extracts the hie\_hs\_src field containing the original source code, writes it to a deterministic path inside the project root, upgrades the HieDb row from FakeFile to RealFile, and returns the URI of the newly written file to the editor.
+    \item when the editor opens this file, HLS detects via getSourceFileOrigin that it is a dependency file and serves hover information and further goto definition requests directly from HieDb, bypassing the normal compilation pipeline entirely.
+\end{enumerate}
 % Road-map
 \newpage
 \section{Road-map}
