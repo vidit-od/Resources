@@ -23,11 +23,39 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{enumitem}
+\usepackage{amssymb}
 
 \setlength{\parindent}{0pt}
 
 \newcommand{\pull}[1]{\href{https://github.com/haskell/haskell-language-server/pull/#1}{#1}}
 \newcommand{\issue}[1]{\href{https://github.com/haskell/haskell-language-server/issues/#1}{#1}}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codeblue}{RGB}{36,114,200}
+\definecolor{codegreen}{RGB}{0,140,90}
+\definecolor{codered}{RGB}{200,50,50}
+\definecolor{codegray}{RGB}{120,120,120}
+\definecolor{codepurple}{RGB}{140,0,140}
+
+\lstset{
+  language=Haskell,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codeblue}\bfseries,
+  commentstyle=\color{codegray}\itshape,
+  stringstyle=\color{codepurple},
+  identifierstyle=\color{black},
+  frame=single,
+  rulecolor=\color{codegray},
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=2,
+  morecomment=[l][\color{codered}]{-},
+  morecomment=[l][\color{codegreen}]{+}
+}
 
 \begin{document}
 
@@ -244,26 +272,180 @@ Most importantly, HieDb stores the path to the original source file i.e for proj
 
 \vspace{0.6em}
 \textcolor{magenta}{Mechanism :  }
-We can implements goto dependency definition through a pipeline of four coordinated steps.
+We can implements goto dependency definition through a pipeline of four steps :
 
 \begin{enumerate}[label=\textcolor{magenta}{\arabic*.}]
     \item During HLS startup, a new background task called indexDependencyHieFiles performs a breadth-first traversal of the transitive dependency graph, discovers all HIE files in the Cabal store for the current project's dependencies, and registers them in HieDb with a FakeFile marker — indicating the HIE file is known but no source file has been written yet.
     \item when the user triggers goto definition on a dependency symbol, HLS queries HieDb and finds the module's HIE file path.
     \item A new function called lookupMod reads that HIE file from disk, extracts the hie\_hs\_src field containing the original source code, writes it to a deterministic path inside the project root, upgrades the HieDb row from FakeFile to RealFile, and returns the URI of the newly written file to the editor.
-    \item when the editor opens this file, HLS detects via getSourceFileOrigin that it is a dependency file and serves hover information and further goto definition requests directly from HieDb, bypassing the normal compilation pipeline entirely.
+    \item when the editor opens this file, HLS can detects that it is a dependency file and serves hover information and further goto definition requests directly from HieDb, bypassing the normal compilation pipeline entirely.
 \end{enumerate}
+\vspace{0.6em}
+\textcolor{magenta}{Limitations:}
+Despite implementing the core feature, the project remains blocked due to fundamental reliability concerns identified during review. The most significant issue relates to type checking and the triggering of rules on dependency files. When a symbol is opened through goto dependency definition, HLS treats the generated file like any other source file and begins applying its usual rules.
+\vspace{0.6em}
+
+This becomes problematic because these dependency files do not actually exist on disk and therefore lack accompanying project context such as the corresponding `.cabal` files. As a result, the rule system begins to break, leading to a large number of incorrect errors and warnings being presented to the user.
+\vspace{0.6em}
+
+This PR attempted to address the type checking and rule triggering issues by creating a whitelist of rules at runtime. However, this leaves a large number of rules that need to be tracked and maintained to ensure that no unintended rule slips through and causes problems later on. As a result, this approach is fragile and difficult to maintain.
+
+\vspace{0.6em}
+Unlike other third-party libraries that are built by Cabal, additional challenges arise when dealing with boot libraries. As discussed earlier, the `-fwrite-ide-info` flag must be passed during compilation in order to generate HIE files. However, boot libraries are already compiled and distributed with GHC as binary artifacts. Re-downloading the same version of GHC and recompiling it locally is not a viable solution, because each name is assigned a unique identifier during compilation. Recompilation would therefore produce different identifiers, making it impossible to correctly correlate the generated HIE files with the existing binaries.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{Flowchart_GOTO.png}
+    \caption{A Flowchart of events to track Goto Dependency defination}
+    \label{fig:sample}
+\end{figure}
+
+\subsection{Proposed Approach}
+A significant portion of the foundational work for this project has already been completed in PR \#3749. Building on top of this implementation provides the most practical path forward for tackling the problem. The overall implementation can be divided into four stages.
+
+\vspace{0.6em}
+\textcolor{magenta}{\textit{1. Rebase and Stabilise :  }}
+The first step is to rebase this PR onto the current \texttt{master} branch of HLS. Since the PR was written against an older version of the codebase, significant changes have occurred in the interim, and rebasing will require resolving conflicts across several core files. While solving these conflicts we also have to make sure that the surrounding architecture remains correct.
+
+\vspace{0.6em}
+After rebasing, the implementation must be verified to compile and run correctly. This includes ensuring that the existing test suite passes and confirming the expected runtime behaviour.In addition, PR \#3749 depends on a fork of HieDb (\texttt{wz1000/HieDb}) that introduces utilities such as \texttt{addSrcFile}, \texttt{FakeFile}, and \texttt{lookupPackage}. Stabilising these utilities is also expected in this stage.
+\vspace{0.6em}
+
+\textcolor{magenta}{\textit{2. Type-Level Rule :  }}
+A major limitation of PR \#3749 is the runtime whitelist used to prevent certain rules from executing on dependency files. This approach is fragile as consequently, new rules introduced in the future could accidentally execute on dependency files without detection.
+\vspace{0.6em}
+
+The proposed solution is to enforce the distinction between file types directly in the type system. This is achieved using a new \texttt{InputClass} kind, a \texttt{RuleInput} type family, and a phantom-typed \texttt{InputPath} wrapper around \texttt{NormalizedFilePath}. Each rule declares the class of inputs it accepts, and the type system ensures that only compatible file types can be passed to that rule. Below is a demo implementation of this typed system.
+\vspace{0.6em}
+
+\begin{lstlisting}[language=Haskell]
+data InputClass
+   = ProjectHaskellFiles
+   | AllHaskellFiles
+   | CabalFile
+   | StackYaml
+   | NoFile
+
+type family RuleInput key :: InputClass
+
+newtype InputPath (i :: InputClass) =
+   InputPath { unInputPath :: NormalizedFilePath }
+   deriving newtype (Eq, Hashable, NFData, Typeable, Show)
+
+type IdeRule k i v =
+   ( Shake.RuleInput k ~ i
+   , Shake.RuleResult k ~ v
+   , Shake.ShakeValue k
+   , Show v
+   , Typeable v
+
+\end{lstlisting}
+
+\vspace{0.6em}
+Under this design, compilation rules such as \texttt{TypeCheck} and \texttt{GenerateCore} operate only on project files, while rules intended to work across all modules accept a broader input class. If an incompatible file type is passed to a rule, the violation is caught at compile time rather than at runtime.
+\vspace{0.6em}
+
+Implementing this change requires updating rule definitions across the codebase. All rules in \texttt{RuleTypes.hs} must declare their input class, and functions in \texttt{Shake.hs} that currently accept \texttt{NormalizedFilePath} must be updated to operate on \texttt{InputPath}. Corresponding updates will also be required in \texttt{Rules.hs} and in all plugins that invoke these functions.
+\vspace{0.6em}
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Rule} & \textbf{Project File} & \textbf{Dependency File} \\
+\hline
+\texttt{GetModificationTime}    & \textcolor{teal}{\checkmark} runs         & \textcolor{teal}{\checkmark} runs \\
+\hline
+\texttt{GetFileContents}        & \textcolor{teal}{\checkmark} runs         & \textcolor{teal}{\checkmark} runs \\
+\hline
+\texttt{GetModSummary}          & \textcolor{teal}{\checkmark} runs         & \textcolor{teal}{\checkmark} runs \\
+\hline
+\texttt{GetLocatedImports}      & \textcolor{teal}{\checkmark} runs         & \textcolor{red}{\texttimes} blocked \\
+\hline
+\texttt{GhcSession}             & \textcolor{teal}{\checkmark} runs         & \textcolor{red}{\texttimes} blocked \\
+\hline
+\texttt{GhcSessionDeps}         & \textcolor{teal}{\checkmark} runs         & \textcolor{red}{\texttimes} blocked \\
+\hline
+\texttt{TypeCheck}              & \textcolor{teal}{\checkmark} runs         & \textcolor{red}{\texttimes} blocked \\
+\hline
+\texttt{GenerateCore}           & \textcolor{teal}{\checkmark} runs         & \textcolor{red}{\texttimes} blocked \\
+\hline
+\texttt{GetHieAst}              & \textcolor{teal}{\checkmark} runs         & \textcolor{blue}{$\circlearrowleft$} from HieDb only \\
+\hline
+\texttt{GetModIface}            & \textcolor{teal}{\checkmark} runs         & \textcolor{teal}{\checkmark} runs \\
+\hline
+\texttt{NonLocalCompletions}    & \textcolor{teal}{\checkmark} runs         & \textcolor{red}{\texttimes} blocked \\
+\hline
+\end{tabular}
+\caption{A partial list of rules and where to enforce them}
+\label{tab:rule-applicability}
+\end{table}
+
+\textcolor{magenta}{\textit{3. Read-Only Enforcement :  }}
+Source files generated for dependencies must be protected from accidental modification. This protection will be implemented through multiple layers to ensure robust behaviour across different editors.
+\vspace{0.6em}
+
+When HLS writes the first dependency file, it will update the project's vscode settings.json to include a \texttt{files.readonlyInclude} rule for dependencies. This causes VS Code to mark these files as read-only and prevents editing directly within the editor.
+\vspace{0.6em}
+
+As an additional safeguard for non–VS Code environments, each generated file can have its write permissions removed at the operating system level after creation. The parent directory remains writable so that new dependency files can still be generated when navigation occurs.
+\vspace{0.6em}
+
+Finally, PR \#3749 already introduces a read-only status within the Files-of-Interest system. If a \texttt{textDocument/didChange} notification somehow reaches HLS, it will be ignored and no rebuild will be triggered. Together, these mechanisms provide layered protection against accidental edits.
+\vspace{0.6em}
+
+\textcolor{magenta}{\textit{4. Boot Library HIE Files :  }}
+Obtaining HIE files for boot libraries remains an open problem. This is separate and must be developed once delivery of the top three stage is completed.
+\vspace{0.6em}
+The primary proposal is to distribute prebuilt HIE files together with a corresponding HieDb database as a separate downloadable artifact for each GHC version. Instead of bundling these files directly with the GHC distribution, they would be provided as an optional package with a predictable structure. This approach has several advantages. First, it avoids inflating the size of standard GHC installations by keeping HIE metadata separate from the compiler binaries. Second, it provides a cleaner user experience. Tooling such as \texttt{ghcup} could expose a command to download the corresponding HIE files for the installed GHC version.
+\vspace{0.6em}
+
+An important question is whether HIE files can become stale for a given GHC release. Since boot libraries change only when GHC itself is updated, it is likely that HIE files remain valid for the entire lifetime of a specific GHC version. Under this assumption, new HIE files would only need to be generated when a new GHC version is released.This suggests a straightforward maintenance strategy: whenever a new GHC version is released, an automated process could build the compiler with HIE generation enabled for boot libraries. These artifacts could then be published alongside the release.
+
+\vspace{0.6em}
+\textit{Multiple HieDb Instances.}
+If boot library HIE files are distributed separately, HLS would effectively operate with two databases: one generated locally for project dependencies and another containing prebuilt metadata for boot libraries. One possible approach is to treat the boot library database as a fallback. If a lookup fails in the local HieDb, HLS could query the boot library database before returning a failure.
 % Road-map
 \newpage
 \section{Road-map}
 
-\subsection{Pre-coding}
-
-\begin{itemize}
-\item Discuss the project with my mentor in further detail.
-\end{itemize}
+\subsection{Availability}
+I am currently a second-year master’s student and have three classes per week during the project period. Aside from these commitments, I do not have any other planned obligations that would interfere with my work on this project. I will be able to dedicate approximately 30–40 hours per week toward development
 
 \subsection{Coding Period}
+\begin{enumerate}[label=\textcolor{magenta}{\arabic*.}]
+\item Rebase PR \#3749 onto the current HLS \texttt{master} branch and ensure the implementation compiles and behaves correctly with the latest codebase.
 
-\subsection{Post GSoC}
+\item Reimplement the changes proposed in PR \#4449 on top of the rebased implementation and verify that rule triggering on dependency files is handled safely.
 
+\item Extract the type-level rule constraint changes from step 2 into a standalone PR so that they can be reviewed and merged independently.
+
+\item Merge the rule constraint infrastructure into HLS after review, ensuring the new rule safety mechanism is available in the main codebase.
+
+\item Finalize and land the rebased implementation of PR \#3749 once the rule constraint infrastructure is in place.
+
+\item Improve the usability of generating and indexing HIE files for dependencies through better documentation, prompts from HLS, and clearer Cabal configuration guidance.
+
+\item Investigate approaches for supporting boot libraries, including packaging HIE files separately from GHC or providing tooling support (e.g., via \texttt{ghcup}) to obtain them easily.
+\end{enumerate}
+
+\subsection{Timeline}
+
+The project will span approximately 12 weeks (350 hours). The first half of the project will focus on stabilizing the existing prototype and implementing the rule constraint infrastructure, while the second half will focus on integration, usability improvements, and extended support for boot libraries.
+\vspace{0.6em}
+
+\textcolor{magenta}{\textit{Weeks 1--4 :  }} Rebase PR \#3749 onto the current HLS \texttt{master} branch and ensure the implementation compiles correctly. Reimplement the type-level rule constraint mechanism proposed in PR \#4449 on top of the rebased implementation.
+\vspace{0.6em}
+
+\textcolor{magenta}{\textit{Weeks 5--6 :  }} Use the feature locally to verify correct behavior and determine the appropriate set of rules for each input class. Once validated, extract the type-level rule constraint infrastructure into a standalone PR. This will form the primary deliverable for the midterm evaluation.
+\vspace{0.6em}
+
+\textcolor{magenta}{\textit{Weeks 7--8 :  }} Finalize the rule constraint system and address any issues discovered during testing. Work towards merging the standalone rule constraint PR and landing the rebased implementation of PR \#3749.
+\vspace{0.6em}
+
+\textcolor{magenta}{\textit{Weeks 9--11 :  }} Improve the usability of generating and indexing HIE files for dependencies through documentation updates and improved guidance from HLS. Investigate possible approaches for supporting boot libraries and evaluate feasible distribution strategies for boot library HIE files. If feasible, prototype integration and verify compatibility with the existing indexing pipeline.
+\vspace{0.6em}
+
+\textcolor{magenta}{\textit{Weeks 12 :  }} Stabilization phase. Address remaining issues, refine documentation, and prepare the feature for upstream integration into HLS.
 \end{document}
