@@ -1,0 +1,211 @@
+%-----------------------------------------------------------------------------------------------------------------------------------------------%
+%	The MIT License (MIT)
+%
+%	Copyright (c) 2021 Jitin Nair
+%
+%	Permission is hereby granted, free of charge, to any person obtaining a copy
+%	of this software and associated documentation files (the "Software"), to deal
+%	in the Software without restriction, including without limitation the rights
+%	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+%	copies of the Software, and to permit persons to whom the Software is
+%	furnished to do so, subject to the following conditions:
+%
+%	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+%	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+%	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+%	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+%	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+%	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+%	THE SOFTWARE.
+%
+%
+%-----------------------------------------------------------------------------------------------------------------------------------------------%
+
+%----------------------------------------------------------------------------------------
+%	DOCUMENT DEFINITION
+%----------------------------------------------------------------------------------------
+
+% article class because we want to fully customize the page and not use a cv template
+\documentclass[a4paper,12pt]{article}
+
+%----------------------------------------------------------------------------------------
+%	FONT
+%----------------------------------------------------------------------------------------
+
+% % fontspec allows you to use TTF/OTF fonts directly
+% \usepackage{fontspec}
+% \defaultfontfeatures{Ligatures=TeX}
+
+% % modified for ShareLaTeX use
+% \setmainfont[
+% SmallCapsFont = Fontin-SmallCaps.otf,
+% BoldFont = Fontin-Bold.otf,
+% ItalicFont = Fontin-Italic.otf
+% ]
+% {Fontin.otf}
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES
+%----------------------------------------------------------------------------------------
+\usepackage{url}
+\usepackage{parskip}
+
+%other packages for formatting
+\RequirePackage{color}
+\RequirePackage{graphicx}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[scale=0.9]{geometry}
+
+%tabularx environment
+\usepackage{tabularx}
+
+%for lists within experience section
+\usepackage{enumitem}
+
+% centered version of 'X' col. type
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+%to prevent spillover of tabular into next pages
+\usepackage{supertabular}
+\usepackage{tabularx}
+\newlength{\fullcollw}
+\setlength{\fullcollw}{0.47\textwidth}
+
+%custom \section
+\usepackage{titlesec}
+\usepackage{multicol}
+\usepackage{multirow}
+
+%CV Sections inspired by:
+%http://stefano.italians.nl/archives/26
+\titleformat{\section}{\Large\scshape\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{10pt}{10pt}
+
+%for publications
+\usepackage[style=authoryear,sorting=ynt, maxbibnames=2]{biblatex}
+
+%Setup hyperref package, and colours for links
+\usepackage[unicode, draft=false]{hyperref}
+\definecolor{linkcolour}{rgb}{0,0.2,0.6}
+\hypersetup{colorlinks,breaklinks,urlcolor=linkcolour,linkcolor=linkcolour}
+\addbibresource{citations.bib}
+\setlength\bibitemsep{1em}
+
+%for social icons
+\usepackage{fontawesome5}
+
+%debug page outer frames
+%\usepackage{showframe}
+
+
+% job listing environments
+\newenvironment{jobshort}[2]
+    {
+    \begin{tabularx}{\linewidth}{@{}l X r@{}}
+    \textbf{#1} & \hfill &  #2 \\[3.75pt]
+    \end{tabularx}
+    }
+    {
+    }
+
+\newenvironment{joblong}[2]
+    {
+    \begin{tabularx}{\linewidth}{@{}l X r@{}}
+    \textbf{#1} & \hfill &  #2 \\[3.75pt]
+    \end{tabularx}
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=3pt,label=--]
+    }
+    {
+    \end{itemize}
+    \end{minipage}
+    }
+
+
+
+%----------------------------------------------------------------------------------------
+%	BEGIN DOCUMENT
+%----------------------------------------------------------------------------------------
+\begin{document}
+
+% non-numbered pages
+\pagestyle{empty}
+
+%----------------------------------------------------------------------------------------
+%	TITLE
+%----------------------------------------------------------------------------------------
+
+% \begin{tabularx}{\linewidth}{ @{}X X@{} }
+% \huge{Your Name}\vspace{2pt} & \hfill \emoji{incoming-envelope} email@email.com \\
+% \raisebox{-0.05\height}\faGithub\ username \ | \
+% \raisebox{-0.00\height}\faLinkedin\ username \ | \ \raisebox{-0.05\height}\faGlobe \ mysite.com  & \hfill \emoji{calling} number
+% \end{tabularx}
+\begin{tabularx}{\linewidth}{@{} C @{}}
+\Huge{Vidit Odedra} \\[7.5pt]
+\href{https://github.com/vidit-od}{\raisebox{-0.05\height}\faGithub\ vidit-od} \ $|$ \
+\href{https://www.linkedin.com/in/vidit-odedra-02b342219/}{\raisebox{-0.05\height}\faLinkedin\ vidit-odedra} \ $|$ \
+\href{mailto:vidit894@gmail.com}{\raisebox{-0.05\height}\faEnvelope\ vidit894@gmail.com} \ $|$ \
+\href{tel:+91 9016195889}{\raisebox{-0.05\height}\faMobile\ +91 9016195889} \\
+\end{tabularx}
+
+
+%----------------------------------------------------------------------------------------
+% EXPERIENCE SECTIONS
+%----------------------------------------------------------------------------------------
+
+%Experience
+\section{Work Experience}
+
+\begin{jobshort}{Razorpay Software Pvt Ltd – Software Development Intern}{May 2025 -- Jul 2025}
+- Built an AI agent to convert Figma designs into production-ready code using Blade UI.\\
+- Designed MCP server to provide design-aware context to LLMs for accurate, consistent code generation.\\
+- Implemented backend integration and a Journeys feature to auto-generate workflows and API-driven data loading.\\
+- Improved parsing and layout detection, reducing dev effort and cutting timelines by 30–40\%..
+\end{jobshort}
+\\ \\
+\begin{jobshort}{Imagine Powertree Pvt Ltd – Software Development Intern}{Jan 2023 -- May 2023}
+- Developed the company website using Django, PostgreSQL, and vanilla JavaScript.\\
+- Collected and pre-processed solar power data from Powertree and meteorological data from NASA; used correlation matrix to filter irrelevant attributes.\\
+- Built machine learning model predicting solar generation in solar trees with 90\% accuracy.\\
+- Published research findings in an IEEE conference paper.
+\end{jobshort}
+
+%Projects
+\section{Projects}
+\begin{jobshort}{Lightweight Version Control System}{}
+- Implemented features: repository creation, staging, committing, branching and merging. \\
+- Optimized storage with delta compression to track additions/deletions using +/- markers.  \\
+- Represented commit history as a hash-based directed graph, enabling efficient change detection and prevent null commits.\\
+- Enabled lightweight, efficient full state recovery at any commit point via root traversal.
+\end{jobshort}
+\\ \\
+\begin{jobshort}{SafeSage: Online Blogging Platform}{\href{https://github.com/vidit-od/SafeSage}{[Code]}}
+- A full-stack blogging platform using React, TypeScript, Tailwind CSS, and Recoil for responsive UI and state management.\\
+- Deployed a serverless backend with Cloudflare Workers and Hono, integrating Prisma Accelerate for optimized database access.\\
+- Dockerized the application to streamline development, testing, and deployment.
+\end{jobshort}
+
+%----------------------------------------------------------------------------------------
+%	EDUCATION
+%----------------------------------------------------------------------------------------
+\section{Education}
+\begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
+        \textbf{M.Tech - Computer Science and Engineering} & \textbf{2024 - 2026} \\
+        \textit{National Institute of Technology, Tiruchirappalli} & \textbf{CGPA : 9.01} \\
+        \\
+        \textbf{B.Tech - Information and Communication Technology} & \textbf{2019 - 2023} \\
+        \textit{Pandit Deendayal Energy University, Gujarat} & \textbf{CGPA : 9.17} \\[5pt]
+\end{tabular*}
+
+%----------------------------------------------------------------------------------------
+%	PUBLICATIONS
+%----------------------------------------------------------------------------------------
+\section{Academic Achievements}
+- Published a conference paper titled "Forecasting Solar Power Generation in Solar Trees using Machine Learning Implements" at the 2023 IEEE (\href{https://ieeexplore.ieee.org/abstract/document/10461825?casa_token=VnVIj0F5GmgAAAAA:np9Lyeb240POb2R8UDiUHXOX0jsJgSqvlUCyiL9Z7t1q9gTZH2sPWmqPlzHl8xFhsNpmek9N9g}{R10-HTC}).
+ \\
+- Awarded Best Poster Paper at WAMS 2023.\\
+- Published a Conference Paper titled “RealD3: A Real-time Driver Drowsiness Detection Scheme Using Machine Learning” at 2023 IEEE (\href{https://ieeexplore.ieee.org/abstract/document/10242860?casa_token=75rFYzP1-BYAAAAA:WM8uPR6fbcx0Zo_lRJazB3vIYrga_Ccj7F5fliFbOCf23HgypolrAVwLde9y_zlYMzqKaPWpFQ}{WAMS}).\\
+- Secured City Rank 1 in the National Cyber Olympiad (2011, 2012).
+\vfill
+
+\end{document}
