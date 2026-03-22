@@ -122,7 +122,6 @@ open source definitions from third-party libraries.
 
 % Contents
 \tableofcontents
-\newpage
 \section{About Me}
 
 \subsection*{The Student}
@@ -153,16 +152,6 @@ I have been programming for approximately four years. I began with C and C++, fo
 \vspace{0.8em}
 \\ Around one and a half years ago, I started working with TypeScript and developed a strong interest in statically typed languages. This interest led me to explore Haskell, where I became particularly interested in its type system and functional programming paradigm. Over the past few months, I have been actively learning Haskell and contributing to the Haskell Language Server (HLS), gaining practical experience with the codebase
 
-\subsection*{My Projects}
-\addcontentsline{toc}{subsection}{My Projects}
-\begin{itemize}
-    \item Checkmate.io - A TypeScript chessboard built from scratch with full move validation and chess rules, focusing on typed design and state management.
-    \item SafeSage - A blogging platform built with TypeScript that provides a rich text editing experience similar to modern document editors, enabling users to write and publish expressive blog content.
-    \item MyGit - A lightweight version control system implementing repository creation, staging, committing, branching, and merging. It uses delta compression and a hash-based commit graph to efficiently track changes and enable full state recovery at any commit.
-\end{itemize}
-
-Most of my projects (including others) can be found on my \href{https://github.com/vidit-od}{github} page.
-
 \newpage
 \subsection*{Contributions}
 \addcontentsline{toc}{subsection}{Contributions}
@@ -170,73 +159,39 @@ I started contributing to the Haskell Language Server (HLS) in January 2026. Sin
 
 
 \subsubsection*{Merged PR's}
-\addcontentsline{toc}{subsubsection}{Merged PRs}
 The following pull requests represent my \textbf{direct contributions} that were reviewed and \textbf{merged} into the Haskell Language Server master branch.
 \vspace{0.3em}
 \begin{itemize}
    \item\pull{4791} -- \textit{Improving Notes Plugin}
-   \\ Enhanced the Notes plugin with hover support and autocomplete for note declarations and references.
-   \vspace{0.3em}
-  \item \pull{4813} -- \textit{Cursor aware record expansion}
-  \\ Implemented cursor's position–aware record expansion for explicitRecord, providing a single code action based on the cursor location.
-  \vspace{0.3em}
+   \item \pull{4813} -- \textit{Cursor aware record expansion}
   \item \pull{4823} -- \textit{Smart Casing in modules and file paths}
-  \\ Implemented Smart Case completions in Cabal files for modules and file paths.
-  \vspace{0.3em}
   \item \pull{4828} -- \textit{Fix notes crashing and leaking single comments notes}
-  \\ Fixed Notes plugin crash when no locations were found and corrected parsing of single-line note declarations.
-  \vspace{0.3em}
   \item \pull{4841} -- \textit{Fix spacing issues while refactor-reduce}
-  \\ Fixed spacing inconsistencies in reduction code actions by adding normalization and removing resetEntryDP.
-  \vspace{0.3em}
   \item \pull{4848} -- \textit{Custom-setups completion in cabal files}
-  \\ Fixed missing completions for the custom-setup stanza in Cabal files by adding the required stanza mapping.
-  \vspace{0.3em}
   \item \pull{4856} -- \textit{Use Server side Diagnostics}
-  \\  Implemented server-side diagnostics injection for code actions by using activeDiagnosticsInRange instead of relying on client-provided diagnostics.
-  \vspace{0.3em}
   \item \pull{4857} -- \textit{Produce structured error for unknown module }
-  \\ Replaced regex-based unknown module detection with structured cradle error diagnostics.
-  \vspace{0.3em}
   \item \pull{4696} - \textit{Upgrade Stack Snapshots}
-  \\ Updated Stack configurations by removing the GHC 9.6 build option and introducing support for GHC 9.10, enabling HLS to build with both GHC 9.8 and GHC 9.10.
-
+  \item \pull{4865} -- \textit{Migrate stackage build on GHA}
+  \item \pull{4868} -- \textit{Fix cache cleaning job}
 \end{itemize}
 
 \subsubsection*{Open PRs}
-\addcontentsline{toc}{subsubsection}{Open PRs}
 The following pull requests represent my \textbf{direct contributions} that are currently \textbf{under review} and have not yet been merged into the Haskell Language Server master branch.
 \vspace{0.3em}
 \begin{itemize}
   \item \pull{4845} -- \textit{Cross Module renaming}
-  \\ Implemented cross-module renaming in HLS using HieDb and AST analysis to correctly handle local, imported, and exported identifiers.
-  \vspace{0.3em}
-
   \item \pull{4849} -- \textit{Migrate HLS-refactor-plugin to use Structured Diagnostic}
-  \\ Partially migrated hls-refactor-plugin to structured diagnostics by updating several code actions and hole-handling functions to use structured diagnostic information.
-
-  \item  \pull{4865} -- \textit{Migrate stackage build on GHA}
-  \\ Stackage Build tests happens on circleci while other tests happen on Github Actions (GHA). This PR migrates the stackage build tests to GHA.
-
 \end{itemize}
 
 \subsubsection*{Other Contributions}
-\addcontentsline{toc}{subsubsection}{Other Contributions}
 This section highlights \textbf{indirect contributions} where I investigated issues and reported bugs that were later resolved by other HLS contributors.
 \vspace{0.3em}
 
 \begin{itemize}
   \item \issue{4843} - \textit{Double hashes in ghcide cache path causes long path}
-  \\ Reported a Windows-specific issue where long file paths prevented HLS from accessing \texttt{.hie} files, causing many unexpected tests to failures on multiple plugins.
-
-  \vspace{0.3em}
   \item \pull{4834} - \textit{Use VirtualFileTree in hls-call-hierarchy-plugin-tests}
-  \\ Investigated consistently failing Windows tests in the \texttt{hls-call-hierarchy-plugin} by analyzing CI logs. Identified that the failures were due to incomplete indexing leading to inconsistent call hierarchy results on Windows.
-  \vspace{0.3em}
-
   \item \pull{4863} - \textit{Pin version of extra to 1.8.1 for stack}
-  \\ Reported stale configurations in \texttt{stack.yaml} leading to failing of \texttt{circleci} regressions tests
-  \vspace{0.3em}
+  \item \issue{4870} - \textit{Discussion on HLS cache management.}
 
 \end{itemize}
 
@@ -267,10 +222,10 @@ This project was previously attempted in \textcolor{magenta}{PR \#}\pull{3749}. 
 \vspace{0.6em}
 
 \textcolor{magenta}{HieDb :  }
-HLS maintains a SQLite database called HieDb that acts as an index over compiled Haskell modules. It stores metadata extracted from HIE files. HLS uses this database as a fast lookup mechanism when resolving symbol locations, avoiding the need to parse raw HIE files for every query.
-
+HLS maintains a SQLite database called HieDb that acts as an index over compiled Haskell modules. It stores metadata extracted from HIE files with their source locations, and paths back to the original source files. HLS uses this database as a fast lookup mechanism when resolving symbol locations, avoiding the need to parse raw HIE files on every query.
 \vspace{0.6em}
-Most importantly, HieDb stores the path to the original source file i.e for project modules this points to an existing .hs file. For dependency modules, this path is missing because only the HIE file exists in the Cabal store and no corresponding source file is available in the workspace. we builds on this infrastructure by intercepting the point where HLS falls back to HieDb for symbol resolution and generating a source file at that moment.This metadata allows HLS to map a symbol reference directly to its declaration location, making it possible to implement navigation features such as goto definition.
+
+By default, HieDb only indexes modules belonging to your own project, dependency modules from third-party libraries have no entries at all. This project extends HieDb's scope by introducing a startup indexing step that discovers HIE files for all transitive dependencies in the Cabal store and registers them in HieDb as placeholder entries, with the source path left empty. We then intercept the point where HLS falls back to HieDb for symbol resolution. At that moment, the corresponding source code is extracted from the HIE file and written to disk, the placeholder entry is upgraded to a real one, and the editor is pointed at the newly written file. This makes it possible to implement goto definition for dependency symbols without requiring their source code to exist on disk ahead of time.
 
 \vspace{0.6em}
 \textcolor{magenta}{Mechanism :  }
@@ -290,14 +245,14 @@ Despite implementing the core feature, the project remains blocked due to fundam
 This becomes problematic because these dependency files do not actually exist on disk and therefore lack accompanying project context such as the corresponding `.cabal` files. As a result, the rule system begins to break, leading to a large number of incorrect errors and warnings being presented to the user.
 \vspace{0.6em}
 
-This PR attempted to address the type checking and rule triggering issues by creating a whitelist of rules at runtime. However, this leaves a large number of rules that need to be tracked and maintained to ensure that no unintended rule slips through and causes problems later on. As a result, this approach is fragile and difficult to maintain.
+PR \#3749 attempted to address the type checking and rule triggering issues by creating a whitelist of rules at runtime. However, this leaves a large number of rules that need to be tracked and maintained to ensure that no unintended rule slips through and causes problems later on. As a result, this approach is fragile and difficult to maintain.
 
 \vspace{0.6em}
-Unlike other third-party libraries that are built by Cabal, additional challenges arise when dealing with boot libraries. As discussed earlier, the `-fwrite-ide-info` flag must be passed during compilation in order to generate HIE files. However, boot libraries are already compiled and distributed with GHC as binary artifacts. Re-downloading the same version of GHC and recompiling it locally is not a viable solution, because each name is assigned a unique identifier during compilation. Recompilation would therefore produce different identifiers, making it impossible to correctly correlate the generated HIE files with the existing binaries.
+Unlike other third-party libraries that are built by Cabal, additional challenges arise when dealing with boot libraries. As discussed earlier, the `-fwrite-ide-info` flag must be passed during compilation in order to generate HIE files. However, boot libraries are already compiled and distributed with GHC as binary artifacts. GHC cannot be recompiled locally, doing so would take several hours and produce different internal name identifiers, making the resulting HIE files incompatible with the existing binaries. Hence, a way to efficiently deliver boot-lib hie files also needs to be explored.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{Flowchart_GOTO.png}
+    \includegraphics[width=0.8\textwidth]{Flowchart_GOTO.png}
     \caption{A Flowchart of events to track Goto Dependency defination}
     \label{fig:sample}
 \end{figure}
@@ -340,7 +295,7 @@ type IdeRule k i v =
    , Shake.ShakeValue k
    , Show v
    , Typeable v
-
+    )
 \end{lstlisting}
 
 \vspace{0.6em}
@@ -388,7 +343,7 @@ Implementing this change requires updating rule definitions across the codebase.
 Source files generated for dependencies must be protected from accidental modification. This protection will be implemented through multiple layers to ensure robust behaviour across different editors.
 \vspace{0.6em}
 
-When HLS writes the first dependency file, it will update the project's vscode settings.json to include a \texttt{files.readonlyInclude} rule for dependencies. This causes VS Code to mark these files as read-only and prevents editing directly within the editor.
+The Plan here is that, When HLS writes the first dependency file, it will update the project's vscode settings.json to include a \texttt{files.readonlyInclude} rule for dependencies. This causes VS Code to mark these files as read-only and prevents editing directly within the editor.
 \vspace{0.6em}
 
 As an additional safeguard for non–VS Code environments, each generated file can have its write permissions removed at the operating system level after creation. The parent directory remains writable so that new dependency files can still be generated when navigation occurs.
@@ -415,19 +370,18 @@ If boot library HIE files are distributed separately, HLS would effectively oper
 \subsection{Availability}
 I am currently a second-year master’s student and have three classes per week during the project period. Aside from these commitments, I do not have any other planned obligations that would interfere with my work on this project. I will be able to dedicate approximately 30–40 hours per week toward development
 
-\subsection{Coding Period}
+\subsection{Project Deliverables}
+These are a set of features / goals that i wish to accomplish by the end of GSOC tenure :
 \begin{enumerate}[label=\textcolor{magenta}{\arabic*.}]
 \item Rebase PR \#3749 onto the current HLS \texttt{master} branch and ensure the implementation compiles and behaves correctly with the latest codebase.
 
-\item Reimplement the changes proposed in PR \#4449 on top of the rebased implementation and verify that rule triggering on dependency files is handled safely.
+\item Teach HLS when and when not to trigger rules by re-implementing PR \#4449.
 
-\item Extract the type-level rule constraint changes from step 2 into a standalone PR so that they can be reviewed and merged independently.
+\item Ensure complete coverage of rules by properly categorising each rule based on where it is allowed to run (e.g., project files, dependency files, all files, etc.).
 
-\item Merge the rule constraint infrastructure into HLS after review, ensuring the new rule safety mechanism is available in the main codebase.
+\item Improve the usability of generating and indexing HIE files for dependencies through better documentation, prompts from HLS, and clearer Cabal config docs.
 
-\item Finalize and land the rebased implementation of PR \#3749 once the rule constraint infrastructure is in place.
-
-\item Improve the usability of generating and indexing HIE files for dependencies through better documentation, prompts from HLS, and clearer Cabal configuration guidance.
+\item Ensure proper implementation of Read-only behavior on dependency files
 
 \item Investigate approaches for supporting boot libraries, including packaging HIE files separately from GHC or providing tooling support (e.g., via \texttt{ghcup}) to obtain them easily.
 \end{enumerate}
